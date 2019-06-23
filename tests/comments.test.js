@@ -24,6 +24,7 @@ describe('comments routes test', () => {
   afterAll(() => {
     return mongoose.connection.close();
   });
+
   it('can post a comment', () => {
     return request(app)
       .post('/api/v1/comments')
@@ -38,17 +39,17 @@ describe('comments routes test', () => {
         });
       });
   });
+
   it('can get all comments', async() => {
     const comments = await Promise.all(
       [...Array(10)]
         .map((_, i) => createCommentHelper(`Comment ${i}`)));
     return request(app)
-      .get('/api/v1/comments/1234')
+      .get('/api/v1/comments/')
       .then(res => {
         comments.forEach(comment => {
           expect(res.body).toContainEqual(comment);
         });
       });
-
   });
 });
