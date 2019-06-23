@@ -3,6 +3,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const mongoose = require('mongoose');
 const Comment = require('../lib/models/Comment');
+const connect = require('../lib/utils/connect');
 
 jest.mock('../lib/middleware/ensure-auth.js');
 
@@ -13,10 +14,10 @@ const createCommentHelper = (body, characterId = '1234') => {
 
 describe('comments routes test', () => {
   beforeAll(() => {
-    return mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
+    return connect();
   });
 
-  afterEach(() => {
+  beforeEach(() => {
     mongoose.connection.dropDatabase();
   });
 
