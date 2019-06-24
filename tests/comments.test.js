@@ -40,16 +40,15 @@ describe('comments routes test', () => {
       });
   });
 
-  it('can get all comments', async() => {
+  it('can get comments by id', async() => {
     const comments = await Promise.all(
       [...Array(10)]
         .map((_, i) => createCommentHelper(`Comment ${i}`)));
     return request(app)
-      .get('/api/v1/comments/')
+      .get('/api/v1/comments/1234')
       .then(res => {
-        comments.forEach(comment => {
-          expect(res.body).toContainEqual(comment);
-        });
+        expect(res.body).toHaveLength(10);
+        expect(comments).toHaveLength(10);
       });
   });
 });
