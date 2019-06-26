@@ -73,4 +73,26 @@ describe('comments routes test', () => {
         }]);
       });
   });
+
+  it('deletes a comment by id', () => {
+    return Comment
+      .create({ 
+        body: 'I am a comment', 
+        characterId: '1234', 
+        email: 'test@test.com' 
+      })
+      .then(comment => {
+        return request(app)
+          .delete(`/api/v1/comments/${comment._id}`);
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          __v: 0,
+          _id: expect.any(String),
+          body: 'I am a comment',
+          characterId: '1234',
+          email: 'test@test.com'
+        });
+      });
+  });
 });
