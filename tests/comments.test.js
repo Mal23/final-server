@@ -40,6 +40,19 @@ describe('comments routes test', () => {
       });
   });
 
+  it('can get all comments', async() => {
+    const comments = await Promise.all(
+      [...Array(10)]
+        .map((_, i) => createCommentHelper(`Comment ${i}`)));
+    return request(app)
+      .get('/api/v1/comments/')
+      .then(res => {
+        comments.forEach(comment => {
+          expect(res.body).toContainEqual(comment);
+        });
+      });
+  });
+  
   it('can get comments by characterId', async() => {
     const comments = await Promise.all(
       [...Array(10)]
@@ -73,7 +86,7 @@ describe('comments routes test', () => {
         }]);
       });
   });
-
+  
   it('deletes a comment by id', () => {
     return Comment
       .create({ 
@@ -90,6 +103,33 @@ describe('comments routes test', () => {
           __v: 0,
           _id: expect.any(String),
           body: 'I am a comment',
+          characterId: '1234',
+          email: 'test@test.com'
+        });
+      });
+  });
+
+  it('updates comment by id', () => {
+    return Comment
+      .create({ 
+        body: 'I am an updated comment', 
+        characterId: '1234', 
+        email: 'test@test.com' 
+      })
+      .then(res => {
+        return request(app)
+          .put(`/api/v1/comments/${res._id}`)
+          .send({ 
+            body: 'I am an updated comment', 
+            characterId: '1234',
+            email: 'test@test.com' 
+          });
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          __v: 0,
+          _id: expect.any(String),
+          body: 'I am an updated comment',
           characterId: '1234',
           email: 'test@test.com'
         });
